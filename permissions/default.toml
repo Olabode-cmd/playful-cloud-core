@@ -1,0 +1,14 @@
+# permissions/default.toml
+# Declares the default permission set for the playful-cloud-core plugin.
+# The desktop shell (playful-cloud-desktop) must include these in its
+# capabilities config to enable the plugin commands.
+
+"$schema" = "../gen/schemas/desktop-schema.json"
+
+[default]
+description = "Default permissions for the playful-cloud-core telemetry plugin."
+permissions = [
+    "allow-start-hook",
+    "allow-stop-hook",
+    "allow-get-session",
+]

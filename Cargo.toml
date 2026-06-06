@@ -1,0 +1,39 @@
+[package]
+name = "playful-cloud-core"
+version = "0.1.0"
+edition = "2021"
+description = "Privacy-first global keyboard telemetry plugin for Playful Cloud. Captures only anonymous timing data — zero character storage."
+license = "MIT"
+authors = ["Playful Cloud"]
+
+[lib]
+name = "playful_cloud_core"
+# rlib only — this is a library plugin consumed by playful-cloud-desktop via Cargo.
+# staticlib / cdylib are not needed and add unnecessary build cost.
+crate-type = ["rlib"]
+
+# ── Core dependencies (all platforms) ──────────────────────────────────────────
+[dependencies]
+tauri = { version = "2", default-features = false }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+uuid = { version = "1", features = ["v4"] }
+log = "0.4"
+
+# ── Windows-only: low-level keyboard hook via Win32 API ────────────────────────
+[target.'cfg(target_os = "windows")'.dependencies]
+windows = { version = "0.58", features = [
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_System_LibraryLoader",
+    "Win32_System_Threading",
+] }
+
+# ── macOS-only: CGEventTap via Core Graphics / Core Foundation ─────────────────
+[target.'cfg(target_os = "macos")'.dependencies]
+core-foundation = "0.10"
+core-graphics = { version = "0.23", features = ["highsierra"] }
+
+# ── Build dependencies ──────────────────────────────────────────────────────────
+# No build dependencies needed for a plugin library crate.
+# tauri-build belongs in the consuming app (playful-cloud-desktop), not here.
